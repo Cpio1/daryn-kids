@@ -9,6 +9,7 @@ import { InstagramIcon } from "./BrandIcons";
 import { Reveal, SectionHeading } from "./ui";
 import { Cloud, Flower, Heart, MiniSun, Sparkle, Star } from "./decor/Decor";
 import { btnPrimary, btnSecondary } from "@/lib/styles";
+import { Mascot } from "./Mascot";
 
 export type GalleryImage = { src: string };
 
@@ -27,6 +28,8 @@ const TILE_PATTERN = [
 
 /** Последняя «широкая» плитка растягивается на всю строку, чтобы в сетке не оставалось дыр. */
 function tileSpan(i: number, count: number) {
+  // мало фото (≤5): одно большое + остальные одинаковые — сетка заполняется без дыр и помещается в экран
+  if (count <= 5) return i === 0 ? "col-span-2 row-span-2" : "row-span-1";
   const isLastWide = i === count - 1 && i % TILE_PATTERN.length === 4;
   return isLastWide ? "col-span-2 row-span-1 md:col-span-3 lg:col-span-4" : TILE_PATTERN[i % TILE_PATTERN.length].span;
 }
@@ -36,11 +39,13 @@ function Lightbox({
   index,
   onClose,
   onIndex,
+  altBase,
 }: {
   images: GalleryImage[];
   index: number;
   onClose: () => void;
   onIndex: (i: number) => void;
+  altBase: string;
 }) {
   const { t } = useLanguage();
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -108,7 +113,7 @@ function Lightbox({
           <Image
             key={current.src}
             src={current.src}
-            alt={`${t.gallery.photoAlt} ${index + 1}`}
+            alt={`${altBase} ${index + 1}`}
             fill
             sizes="100vw"
             className="object-contain"
@@ -193,70 +198,142 @@ function EmptyGallery() {
   );
 }
 
-export function Gallery({ images }: { images: GalleryImage[] }) {
+/** Вертикальные фото комнаты моторики — высокие плитки с разными формами. */
+const PORTRAIT_MASKS = ["mask-egg", "mask-blob1", "mask-blob3", "mask-blob2"];
+
+/** Событие для переключения вкладки из других разделов (например, из «О нас»). */
+export const GALLERY_TAB_EVENT = "daryn-gallery-tab";
+export type GalleryTab = "kindergarten" | "motor";
+
+export function Gallery({ images, motorImages }: { images: GalleryImage[]; motorImages: GalleryImage[] }) {
   const { t } = useLanguage();
+  const [tab, setTab] = useState<GalleryTab>("kindergarten");
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [shown, setShown] = useState(PAGE_SIZE);
-  const visible = images.slice(0, shown);
   const close = useCallback(() => setOpenIndex(null), []);
+
+  useEffect(() => {
+    const onTab = (e: Event) => {
+      const next = (e as CustomEvent<GalleryTab>).detail;
+      if (next === "kindergarten" || next === "motor") setTab(next);
+    };
+    window.addEventListener(GALLERY_TAB_EVENT, onTab);
+    return () => window.removeEventListener(GALLERY_TAB_EVENT, onTab);
+  }, []);
+
+  const hasMotor = motorImages.length > 0;
+  const current = tab === "motor" && hasMotor ? motorImages : images;
+  const isMotor = tab === "motor" && hasMotor;
+  const altBase = isMotor ? t.gallery.motorAlt : t.gallery.photoAlt;
+  const visible = current.slice(0, shown);
+  const total = images.length + motorImages.length;
+
+  const tabs: { id: GalleryTab; label: string; count: number }[] = [
+    { id: "kindergarten", label: t.gallery.tabs.kindergarten, count: images.length },
+    { id: "motor", label: t.gallery.tabs.motor, count: motorImages.length },
+  ];
 
   return (
     <section
       id="gallery"
       aria-labelledby="gallery-title"
-      className="relative overflow-hidden bg-gradient-to-b from-cream via-mint-soft to-cream py-12 sm:py-16 lg:py-20"
+      className="relative overflow-hidden bg-gradient-to-b from-cream via-mint-soft to-cream pb-12 pt-[92px] sm:pb-14 sm:pt-[108px] lg:pb-16 lg:pt-12"
     >
-      <Cloud className="absolute left-[3%] top-10 hidden w-24 animate-drift motion-reduce:animate-none md:block" variant={1} tint="#FFFFFF" />
-      <Flower className="absolute right-[5%] top-14 hidden h-8 w-8 animate-bob motion-reduce:animate-none md:block" color="#A7DBF5" center="#FFD166" />
-      <Heart className="absolute bottom-10 left-[6%] hidden h-5 w-5 lg:block" color="#C4B5FD" />
+      <Cloud className="absolute right-[3%] top-8 hidden w-20 animate-drift motion-reduce:animate-none lg:block" variant={1} tint="#FFFFFF" />
+      <Flower className="absolute right-[22%] top-16 hidden h-7 w-7 animate-bob motion-reduce:animate-none lg:block" color="#A7DBF5" center="#FFD166" />
+      <Heart className="absolute bottom-10 left-[3%] hidden h-5 w-5 lg:block" color="#C4B5FD" />
       <div className="relative mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
-        <SectionHeading id="gallery-title" eyebrow={t.gallery.eyebrow} title={t.gallery.title} text={t.gallery.text} eyebrowClass="bg-lavender/70" />
+        {/* маскот с фотоаппаратом — слева (на телефоне в углу) */}
+        <Mascot
+          name="gallery"
+          delay={900}
+          className="absolute -top-[84px] left-3 h-[80px] sm:-top-[100px] sm:left-6 sm:h-[96px] lg:left-[5%] lg:-top-2 lg:h-[125px] xl:left-[11%] xl:h-[150px]"
+        />
+        <SectionHeading id="gallery-title" compact eyebrow={t.gallery.eyebrow} title={t.gallery.title} text={t.gallery.text} eyebrowClass="bg-lavender/70" />
 
-        {images.length === 0 ? (
+        {total === 0 ? (
           <EmptyGallery />
         ) : (
-          <ul className="mt-10 grid grid-flow-dense auto-rows-[132px] grid-cols-2 gap-2.5 min-[480px]:auto-rows-[170px] sm:gap-3 md:grid-cols-3 lg:mt-12 lg:auto-rows-[190px] lg:grid-cols-4 lg:gap-4">
-            {visible.map((img, i) => (
-              <li key={img.src} className={`shape-shadow relative ${tileSpan(i, visible.length)}`}>
-                <button
-                  type="button"
-                  onClick={() => setOpenIndex(i)}
-                  aria-label={`${t.gallery.open}: ${i + 1}`}
-                  className={`group absolute inset-0 overflow-hidden bg-mint-soft ${TILE_PATTERN[i % TILE_PATTERN.length].mask}`}
-                >
-                  <Image
-                    src={img.src}
-                    alt={`${t.gallery.photoAlt} ${i + 1}`}
-                    fill
-                    sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
-                    className="object-cover object-[center_30%] transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <span className="absolute inset-0 grid place-items-center bg-ink/0 opacity-0 transition-all duration-300 group-hover:bg-pink-deep/25 group-hover:opacity-100 group-focus-visible:bg-pink-deep/35 group-focus-visible:opacity-100">
-                    <span className="mask-flower grid h-14 w-14 place-items-center bg-white text-pink-deep">
-                      <ZoomIn className="h-5 w-5" aria-hidden />
-                    </span>
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
+          <>
+            {hasMotor && images.length > 0 && (
+              <div role="tablist" aria-label={t.gallery.tabsLabel} className="mt-5 flex flex-wrap justify-center gap-2 lg:mt-6">
+                {tabs.map(({ id, label, count }) => {
+                  const active = tab === id;
+                  return (
+                    <button
+                      key={id}
+                      type="button"
+                      role="tab"
+                      aria-selected={active}
+                      aria-controls="gallery-panel"
+                      onClick={() => {
+                        setTab(id);
+                        setShown(PAGE_SIZE);
+                      }}
+                      className={`inline-flex min-h-11 items-center gap-2 px-4 text-sm font-extrabold transition-all duration-300 ${
+                        id === "kindergarten" ? "rounded-[999px_999px_999px_8px]" : "rounded-[999px_999px_8px_999px]"
+                      } ${active ? "bg-pink-deep text-white shadow-soft" : "bg-white text-ink ring-2 ring-pink/30 hover:bg-blush"}`}
+                    >
+                      {label}
+                      <span className={`grid h-6 min-w-6 place-items-center rounded-full px-1.5 text-xs ${active ? "bg-white/25" : "bg-mint-soft"}`}>{count}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
 
-        {images.length > shown && (
-          <div className="mt-8 flex justify-center">
-            <button
-              type="button"
-              onClick={() => setShown((n) => n + PAGE_SIZE)}
-              className={`${btnSecondary} min-h-12 px-6 text-sm`}
+            <ul
+              id="gallery-panel"
+              role={hasMotor && images.length > 0 ? "tabpanel" : undefined}
+              className={`mt-5 grid grid-flow-dense gap-2.5 sm:gap-3 lg:mt-6 lg:gap-4 ${
+                isMotor
+                  ? "auto-rows-[118px] grid-cols-2 min-[480px]:auto-rows-[150px] md:grid-cols-4 md:auto-rows-[130px] lg:auto-rows-[150px] xl:auto-rows-[165px]"
+                  : "auto-rows-[110px] grid-cols-2 min-[480px]:auto-rows-[140px] md:grid-cols-3 md:auto-rows-[130px] lg:auto-rows-[150px] lg:grid-cols-4 xl:auto-rows-[165px]"
+              }`}
             >
-              {t.gallery.more} ({images.length - shown})
-            </button>
-          </div>
+              {visible.map((img, i) => (
+                <li
+                  key={img.src}
+                  className={`shape-shadow relative ${isMotor ? "row-span-2" : tileSpan(i, visible.length)}`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setOpenIndex(i)}
+                    aria-label={`${t.gallery.open}: ${altBase} ${i + 1}`}
+                    className={`group absolute inset-0 overflow-hidden bg-mint-soft ${
+                      isMotor ? PORTRAIT_MASKS[i % PORTRAIT_MASKS.length] : TILE_PATTERN[i % TILE_PATTERN.length].mask
+                    }`}
+                  >
+                    <Image
+                      src={img.src}
+                      alt={`${altBase} ${i + 1}`}
+                      fill
+                      sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
+                      className="object-cover object-[center_40%] transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <span className="absolute inset-0 grid place-items-center bg-ink/0 opacity-0 transition-all duration-300 group-hover:bg-pink-deep/25 group-hover:opacity-100 group-focus-visible:bg-pink-deep/35 group-focus-visible:opacity-100">
+                      <span className="mask-flower grid h-14 w-14 place-items-center bg-white text-pink-deep">
+                        <ZoomIn className="h-5 w-5" aria-hidden />
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+
+            {current.length > shown && (
+              <div className="mt-6 flex justify-center">
+                <button type="button" onClick={() => setShown((n) => n + PAGE_SIZE)} className={`${btnSecondary} min-h-12 px-6 text-sm`}>
+                  {t.gallery.more} ({current.length - shown})
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
 
-      {openIndex !== null && images.length > 0 && (
-        <Lightbox images={images} index={openIndex} onClose={close} onIndex={setOpenIndex} />
+      {openIndex !== null && current.length > 0 && (
+        <Lightbox images={current} index={openIndex} onClose={close} onIndex={setOpenIndex} altBase={altBase} />
       )}
     </section>
   );

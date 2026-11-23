@@ -7,6 +7,7 @@ import { whatsappLink } from "@/data/site";
 import { btnPrimary } from "@/lib/styles";
 import { Reveal, SectionHeading } from "./ui";
 import { Flower, Heart, Sparkle } from "./decor/Decor";
+import { Mascot } from "./Mascot";
 
 /**
  * Раздел питания намеренно нейтральный: меню и режим питания пока не предоставлены.
@@ -118,6 +119,11 @@ export function Nutrition() {
 
               <Reveal delay={120} className="order-first md:order-none">
                 <div className="relative mx-auto aspect-square w-32 min-[390px]:w-36 md:w-full md:max-w-[220px] lg:max-w-[290px]">
+                  <Mascot
+                    name="nutrition"
+                    delay={400}
+                    className="absolute -bottom-3 -left-[92px] z-10 h-[96px] min-[390px]:-left-[100px] sm:h-[110px] md:-bottom-[110px] md:left-auto md:right-0 md:h-[110px] lg:-bottom-12 lg:-right-8 lg:h-[140px]"
+                  />
                   <div className="mask-scallop absolute inset-0 bg-white/80" />
                   <FoodIllustration className="relative h-full w-full p-4 sm:p-6" />
                   <Flower className="absolute -left-2 top-2 h-7 w-7 animate-bob motion-reduce:animate-none sm:h-9 sm:w-9" color="#BFEAD5" center="#FFD166" />

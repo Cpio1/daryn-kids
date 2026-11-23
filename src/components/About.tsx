@@ -1,13 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { Baby, Clock, Languages, Sparkles, Users } from "lucide-react";
+import { ArrowRight, Baby, Clock, Languages, Sparkles, Users } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageProvider";
 import { Reveal, SectionHeading } from "./ui";
 import { Cloud, DashedArc, Flower, Heart, Rainbow, Shape, Sparkle, Star } from "./decor/Decor";
 import { SunMark } from "./Logo";
 import type { ShapeName } from "./decor/shapes";
+import { Mascot } from "./Mascot";
+import { GALLERY_TAB_EVENT, type GalleryImage } from "./Gallery";
+import { handleAnchorClick } from "@/lib/scroll";
 
 export type AboutMedia = { image: string | null; video: string | null };
 
@@ -59,7 +62,81 @@ function AboutVisual({ media, alt }: { media: AboutMedia; alt: string }) {
   );
 }
 
-export function About({ media }: { media: AboutMedia }) {
+const MOTOR_CHIPS = ["bg-sky-soft", "bg-mint-soft", "bg-butter-soft", "bg-lavender-soft"];
+const MOTOR_FRAMES = [
+  "mask-egg h-[190px] w-[31%] sm:h-[250px] lg:h-[230px] xl:h-[260px] -rotate-3",
+  "mask-blob1 h-[220px] w-[34%] sm:h-[290px] lg:h-[270px] xl:h-[300px] rotate-2",
+  "mask-blob3 h-[180px] w-[31%] sm:h-[240px] lg:h-[220px] xl:h-[250px] -rotate-2",
+];
+
+/** Блок «Комната развития моторики»: коллаж из реальных фото + описание. */
+function MotorRoom({ images }: { images: GalleryImage[] }) {
+  const { t } = useLanguage();
+  const m = t.about.motor;
+  const photos = images.slice(0, 3);
+
+  return (
+    <Reveal className="relative mt-14 lg:mt-16">
+      <div className="petal-c relative bg-white/90 p-5 pt-6 shadow-soft ring-1 ring-pink/15 sm:p-8 lg:p-10">
+        {/* маскот с книгой «сидит» на краю блока */}
+        <Mascot
+          name="about"
+          delay={600}
+          className="absolute -top-[70px] right-3 h-[92px] sm:-top-[88px] sm:right-8 sm:h-[112px] lg:-top-[118px] lg:right-12 lg:h-[150px]"
+        />
+        <Sparkle className="absolute left-5 top-5 h-5 w-5" color="#FFD166" />
+
+        <div className="grid items-center gap-7 lg:grid-cols-[1.05fr_1fr] lg:gap-12">
+          {photos.length > 0 && (
+            <div className="relative flex items-end justify-center gap-2.5 sm:gap-4">
+              <div aria-hidden className="mask-blob2 absolute inset-x-4 bottom-0 top-8 bg-mint-soft" />
+              {photos.map((img, i) => (
+                <div key={img.src} className={`shape-shadow relative ${MOTOR_FRAMES[i].split(" ").filter((c) => !c.startsWith("mask-")).join(" ")}`}>
+                  <div className={`relative h-full w-full overflow-hidden bg-sky-soft ${MOTOR_FRAMES[i].split(" ").find((c) => c.startsWith("mask-"))}`}>
+                    <Image src={img.src} alt={`${m.photoAlt} ${i + 1}`} fill sizes="(min-width: 1024px) 200px, 32vw" className="object-cover object-[center_45%]" />
+                  </div>
+                </div>
+              ))}
+              <Heart className="absolute -left-1 top-2 h-6 w-6 animate-bob motion-reduce:animate-none" color="#F472B6" />
+              <Star className="absolute -right-1 top-10 h-6 w-6" />
+            </div>
+          )}
+
+          <div className="pr-0 lg:pr-4">
+            <span className="inline-flex items-center gap-1.5 rounded-[999px_999px_999px_6px] bg-butter px-3 py-1 text-xs font-extrabold uppercase tracking-[0.08em] text-ink">
+              {m.badge}
+            </span>
+            <h3 className="mt-3 pr-20 font-display text-[1.4rem] font-black leading-tight text-ink sm:pr-0 sm:text-[1.7rem] lg:text-[1.9rem]">
+              {m.title}
+            </h3>
+            <p className="mt-3 text-[15px] leading-relaxed text-ink-soft sm:text-base">{m.text}</p>
+            <ul className="mt-4 flex flex-wrap gap-2">
+              {m.chips.map((chip, i) => (
+                <li key={chip} className={`rounded-[999px_999px_999px_8px] px-3 py-1.5 text-[13px] font-bold text-ink ${MOTOR_CHIPS[i % MOTOR_CHIPS.length]}`}>
+                  {chip}
+                </li>
+              ))}
+            </ul>
+            {images.length > 0 && (
+              <a
+                href="#gallery"
+                onClick={(e) =>
+                  handleAnchorClick(e, "gallery", () => window.dispatchEvent(new CustomEvent(GALLERY_TAB_EVENT, { detail: "motor" })))
+                }
+                className="mt-5 inline-flex items-center gap-1.5 text-sm font-extrabold text-pink-ink underline decoration-pink decoration-2 underline-offset-4 hover:decoration-pink-deep"
+              >
+                {m.cta}
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    </Reveal>
+  );
+}
+
+export function About({ media, motorImages }: { media: AboutMedia; motorImages: GalleryImage[] }) {
   const { t } = useLanguage();
   const hasMedia = Boolean(media.image || media.video);
 
@@ -113,6 +190,10 @@ export function About({ media }: { media: AboutMedia }) {
             );
           })}
         </ul>
+      </div>
+
+      <div className="relative mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-8">
+        <MotorRoom images={motorImages} />
       </div>
     </section>
   );

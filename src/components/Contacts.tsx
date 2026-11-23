@@ -9,6 +9,7 @@ import { TwoGisMap } from "./TwoGisMap";
 import { Heart, MiniSun, Rainbow, Shape, Sparkle } from "./decor/Decor";
 import type { ShapeName } from "./decor/shapes";
 import { btnPrimary, btnSecondary, btnSoft } from "@/lib/styles";
+import { Mascot } from "./Mascot";
 
 export function Contacts() {
   const { t, lang } = useLanguage();
@@ -112,7 +113,13 @@ export function Contacts() {
             </div>
           </Reveal>
 
-          <Reveal delay={120} className="min-h-[280px] lg:min-h-0">
+          <Reveal delay={120} className="relative mt-[78px] min-h-[280px] lg:mt-0 lg:min-h-0">
+            <Mascot
+              name="contacts"
+              motion="bounce"
+              delay={700}
+              className="absolute -top-[80px] right-6 z-10 h-[88px] sm:-top-[96px] sm:h-[104px] lg:-top-[118px] lg:right-10 lg:h-[140px]"
+            />
             <TwoGisMap />
           </Reveal>
         </div>

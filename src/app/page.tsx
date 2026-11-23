@@ -9,23 +9,24 @@ import { Documents } from "@/components/Documents";
 import { Contacts } from "@/components/Contacts";
 import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
-import { getAboutMedia, getGalleryImages, getHeroMedia } from "@/lib/media";
+import { getAboutMedia, getGalleryImages, getHeroMedia, getMotorImages } from "@/lib/media";
 
 export default function HomePage() {
   const heroMedia = getHeroMedia();
   const galleryImages = getGalleryImages();
   const aboutMedia = getAboutMedia();
+  const motorImages = getMotorImages();
 
   return (
     <>
       <Header />
       <main id="main">
         <Hero media={heroMedia} />
-        <About media={aboutMedia} />
+        <About media={aboutMedia} motorImages={motorImages} />
         <Groups />
         <Activities />
         <Nutrition />
-        <Gallery images={galleryImages} />
+        <Gallery images={galleryImages} motorImages={motorImages} />
         <Documents />
         <Contacts />
       </main>

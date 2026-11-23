@@ -10,6 +10,7 @@ import { WhatsAppIcon } from "./BrandIcons";
 import { HeroScene } from "./HeroScene";
 import { Cloud, DashedArc, Flower, Heart, MiniSun, Sparkle, Squiggle } from "./decor/Decor";
 import { btnPrimary, btnSecondary } from "@/lib/styles";
+import { Mascot } from "./Mascot";
 
 export type HeroMedia = { image: string | null; video: string | null };
 
@@ -98,7 +99,12 @@ export function Hero({ media }: { media: HeroMedia }) {
 
       <div className="mx-auto grid w-full max-w-[1320px] grid-cols-1 gap-x-12 px-4 pb-10 pt-5 [grid-template-areas:'title'_'art'_'body'] sm:px-6 sm:pt-8 md:grid-cols-[1.1fr_0.9fr] md:gap-x-8 md:pb-14 md:[grid-template-areas:'title_art'_'body_art'] lg:grid-cols-[1.05fr_1fr] lg:gap-x-12 lg:px-8 lg:pb-16 lg:pt-6 xl:gap-x-16">
         {/* Заголовок */}
-        <div className="[grid-area:title] md:self-end">
+        <div className="relative [grid-area:title] md:self-end">
+          <Mascot
+            name="hero"
+            motion="bounce"
+            className="absolute -top-1 right-0 h-[84px] min-[390px]:h-[92px] sm:right-2 sm:h-[120px] md:-top-2 md:right-0 md:h-[110px] lg:hidden"
+          />
           <span className="inline-flex items-center gap-2 rounded-[999px_999px_999px_6px] bg-white/90 px-3 py-1.5 text-[13px] font-extrabold text-ink shadow-soft ring-1 ring-pink/20 sm:text-sm">
             <MiniSun className="h-5 w-5 animate-spin-slow motion-reduce:animate-none" />
             {t.hero.badge}
@@ -146,7 +152,12 @@ export function Hero({ media }: { media: HeroMedia }) {
         </div>
 
         {/* Текст и кнопки */}
-        <div className="mt-6 [grid-area:body] sm:mt-8 md:mt-6 md:self-start lg:mt-7">
+        <div className="relative mt-6 [grid-area:body] sm:mt-8 md:mt-6 md:self-start lg:mt-7 lg:pr-[128px] xl:pr-[150px]">
+          <Mascot
+            name="hero"
+            motion="bounce"
+            className="absolute -bottom-3 -right-4 hidden h-[150px] lg:block xl:-right-6 xl:h-[178px]"
+          />
           <p className="max-w-xl text-[1.02rem] leading-relaxed text-ink-soft sm:text-lg">{t.hero.text}</p>
 
           <div className="mt-6 flex flex-col gap-3 min-[480px]:flex-row min-[480px]:flex-wrap">
@@ -154,7 +165,7 @@ export function Hero({ media }: { media: HeroMedia }) {
               href={whatsappLink(lang)}
               target="_blank"
               rel="noopener noreferrer"
-              className={`${btnPrimary} min-h-14 px-7 text-base`}
+              className={`${btnPrimary} min-h-14 px-6 text-base lg:min-h-[52px] lg:px-5 lg:text-[15px]`}
             >
               <WhatsAppIcon className="h-6 w-6" />
               {t.hero.whatsapp}
@@ -162,7 +173,7 @@ export function Hero({ media }: { media: HeroMedia }) {
             <a
               href="#groups"
               onClick={(e) => handleAnchorClick(e, "groups")}
-              className={`${btnSecondary} min-h-14 px-6 text-base`}
+              className={`${btnSecondary} min-h-14 px-6 text-base lg:min-h-[52px] lg:px-5 lg:text-[15px]`}
             >
               {t.hero.more}
               <ArrowDown className="h-4 w-4" aria-hidden />

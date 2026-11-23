@@ -7,6 +7,7 @@ import { btnPrimary } from "@/lib/styles";
 import { Reveal, SectionHeading } from "./ui";
 import { Cloud, Flower, Heart, MiniSun, Shape, Sparkle, Star, Wave } from "./decor/Decor";
 import type { ShapeName } from "./decor/shapes";
+import { Mascot } from "./Mascot";
 
 type Theme = {
   band: string;
@@ -59,7 +60,12 @@ export function Groups() {
       <Heart className="absolute left-[5%] top-16 hidden h-5 w-5 md:block" color="#A7DBF5" />
       <Star className="absolute right-[6%] top-24 hidden h-5 w-5 animate-twinkle motion-reduce:animate-none md:block" />
 
-      <div className="relative mx-auto max-w-[1180px] px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+      <div className="relative mx-auto max-w-[1180px] px-4 pb-12 pt-[92px] sm:px-6 sm:pb-16 sm:pt-[108px] lg:px-8 lg:py-20">
+        <Mascot
+          name="groups"
+          delay={200}
+          className="absolute left-3 top-2 h-[80px] sm:left-6 sm:top-3 sm:h-[96px] lg:left-[3%] lg:top-[64px] lg:h-[150px]"
+        />
         <SectionHeading id="groups-title" eyebrow={t.groups.eyebrow} title={t.groups.title} text={t.groups.text} eyebrowClass="bg-butter-soft" />
 
         <div className="mx-auto mt-10 grid max-w-2xl grid-cols-1 gap-6 lg:mt-12 lg:max-w-none lg:grid-cols-2 lg:gap-10">

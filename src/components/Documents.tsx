@@ -7,6 +7,7 @@ import { documentCategories, documents, type DocumentCategory, type DocumentType
 import { Reveal, SectionHeading } from "./ui";
 import { Flower, Heart, Shape, Sparkle } from "./decor/Decor";
 import type { ShapeName } from "./decor/shapes";
+import { Mascot } from "./Mascot";
 import { asset } from "@/lib/basePath";
 
 /** Карточки-«папки»: у каждой своя вкладка, цвет и фигурный бейдж. */
@@ -30,13 +31,18 @@ export function Documents() {
   const { t, lang } = useLanguage();
 
   return (
-    <section id="documents" aria-labelledby="documents-title" className="relative overflow-hidden bg-white py-12 sm:py-16 lg:py-20">
+    <section id="documents" aria-labelledby="documents-title" className="relative overflow-hidden bg-white pb-12 pt-[92px] sm:pb-16 sm:pt-[108px] lg:py-20">
       <div aria-hidden className="dotted-bg absolute inset-0 opacity-50 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]" />
       <div aria-hidden className="mask-blob2 pointer-events-none absolute -left-20 bottom-0 h-48 w-48 bg-lavender-soft sm:h-64 sm:w-64" />
       <Sparkle className="absolute right-[10%] top-14 hidden h-6 w-6 md:block" color="#F472B6" />
       <Flower className="absolute left-[8%] top-20 hidden h-7 w-7 md:block" color="#FFE08A" center="#F472B6" />
 
       <div className="relative mx-auto max-w-[1240px] px-4 sm:px-6 lg:px-8">
+        <Mascot
+          name="documents"
+          delay={500}
+          className="absolute -top-[84px] right-3 h-[80px] sm:-top-[100px] sm:right-6 sm:h-[96px] lg:right-[4%] lg:-top-2 lg:h-[150px]"
+        />
         <SectionHeading id="documents-title" eyebrow={t.documents.eyebrow} title={t.documents.title} text={t.documents.text} eyebrowClass="bg-lavender" />
 
         <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-5 lg:mt-14 lg:gap-6">

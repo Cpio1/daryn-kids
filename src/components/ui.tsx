@@ -55,8 +55,11 @@ export function SectionHeading({
   align = "center",
   eyebrowClass = "bg-butter-soft",
   id,
+  compact = false,
 }: {
   id?: string;
+  /** компактный вариант для длинных разделов: меньше заголовок и отступы */
+  compact?: boolean;
   eyebrow: string;
   title: string;
   text?: string;
@@ -74,10 +77,17 @@ export function SectionHeading({
         </svg>
         {eyebrow}
       </span>
-      <h2 id={id} className="mt-3 font-display text-[1.6rem] font-extrabold leading-[1.2] text-ink sm:text-3xl lg:text-[2.35rem]">
+      <h2
+        id={id}
+        className={`font-display font-extrabold leading-[1.2] text-ink ${
+          compact ? "mt-2 text-[1.45rem] sm:text-[1.75rem] lg:text-[2rem]" : "mt-3 text-[1.6rem] sm:text-3xl lg:text-[2.35rem]"
+        }`}
+      >
         {title}
       </h2>
-      {text && <p className="mt-3 text-base leading-relaxed text-ink-soft sm:text-lg">{text}</p>}
+      {text && (
+        <p className={`leading-relaxed text-ink-soft ${compact ? "mt-2 text-[15px] sm:text-base" : "mt-3 text-base sm:text-lg"}`}>{text}</p>
+      )}
     </Reveal>
   );
 }

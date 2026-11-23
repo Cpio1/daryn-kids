@@ -34,15 +34,24 @@ export function getAboutMedia() {
   };
 }
 
+/** Фотографии комнаты развития моторики: public/images/motorika/ */
+export function getMotorImages() {
+  return listImages("motorika");
+}
+
 /** Все изображения из public/images/gallery, отсортированные по имени файла. */
 export function getGalleryImages() {
-  const dir = path.join(PUBLIC_DIR, "images", "gallery");
+  return listImages("gallery");
+}
+
+function listImages(folder: string) {
+  const dir = path.join(PUBLIC_DIR, "images", folder);
   try {
     return fs
       .readdirSync(dir)
       .filter((f) => IMAGE_EXT.test(f) && !f.startsWith("."))
       .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
-      .map((f) => ({ src: asset(`/images/gallery/${encodeURIComponent(f)}`) }));
+      .map((f) => ({ src: asset(`/images/${folder}/${encodeURIComponent(f)}`) }));
   } catch {
     return [];
   }
