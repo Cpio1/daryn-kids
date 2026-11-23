@@ -5,13 +5,18 @@ import type { LucideIcon } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageProvider";
 import { documentCategories, documents, type DocumentCategory, type DocumentType } from "@/data/documents";
 import { Reveal, SectionHeading } from "./ui";
-import { Sparkle } from "./decor/Decor";
+import { Flower, Heart, Shape, Sparkle } from "./decor/Decor";
+import type { ShapeName } from "./decor/shapes";
 import { asset } from "@/lib/basePath";
 
-const CATEGORY_STYLE: Record<DocumentCategory, { icon: LucideIcon; card: string; iconBg: string; shape: string }> = {
-  licenses: { icon: ShieldCheck, card: "bg-sky-soft", iconBg: "bg-sky", shape: "rounded-[36px_36px_36px_12px]" },
-  founding: { icon: ScrollText, card: "bg-peach-soft", iconBg: "bg-peach", shape: "rounded-[36px]" },
-  other: { icon: FolderOpen, card: "bg-mint-soft", iconBg: "bg-mint", shape: "rounded-[12px_36px_36px_36px]" },
+/** Карточки-«папки»: у каждой своя вкладка, цвет и фигурный бейдж. */
+const CATEGORY_STYLE: Record<
+  DocumentCategory,
+  { icon: LucideIcon; card: string; tab: string; tabPos: string; badge: ShapeName; badgeFill: string; shape: string }
+> = {
+  licenses: { icon: ShieldCheck, card: "bg-sky-soft", tab: "bg-sky-soft", tabPos: "left-6", badge: "scallop", badgeFill: "#A7DBF5", shape: "rounded-[10px_34px_34px_34px]" },
+  founding: { icon: ScrollText, card: "bg-butter-soft", tab: "bg-butter-soft", tabPos: "left-1/2 -translate-x-1/2", badge: "flower", badgeFill: "#FFE08A", shape: "rounded-[34px]" },
+  other: { icon: FolderOpen, card: "bg-mint-soft", tab: "bg-mint-soft", tabPos: "right-6", badge: "cloud", badgeFill: "#BFEAD5", shape: "rounded-[34px_10px_34px_34px]" },
 };
 
 const TYPE_ICON: Record<DocumentType, LucideIcon> = {
@@ -27,28 +32,34 @@ export function Documents() {
   return (
     <section id="documents" aria-labelledby="documents-title" className="relative overflow-hidden bg-white py-12 sm:py-16 lg:py-20">
       <div aria-hidden className="dotted-bg absolute inset-0 opacity-50 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]" />
-      <Sparkle className="absolute right-[10%] top-14 hidden h-6 w-6 md:block" color="#FFD65A" />
+      <div aria-hidden className="mask-blob2 pointer-events-none absolute -left-20 bottom-0 h-48 w-48 bg-lavender-soft sm:h-64 sm:w-64" />
+      <Sparkle className="absolute right-[10%] top-14 hidden h-6 w-6 md:block" color="#F472B6" />
+      <Flower className="absolute left-[8%] top-20 hidden h-7 w-7 md:block" color="#FFE08A" center="#F472B6" />
 
       <div className="relative mx-auto max-w-[1240px] px-4 sm:px-6 lg:px-8">
-        <SectionHeading id="documents-title" eyebrow={t.documents.eyebrow} title={t.documents.title} text={t.documents.text} eyebrowClass="bg-lilac" />
+        <SectionHeading id="documents-title" eyebrow={t.documents.eyebrow} title={t.documents.title} text={t.documents.text} eyebrowClass="bg-lavender" />
 
-        <div className="mt-10 grid gap-4 md:grid-cols-3 lg:mt-12 lg:gap-6">
+        <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-5 lg:mt-14 lg:gap-6">
           {documentCategories.map((cat, ci) => {
             const style = CATEGORY_STYLE[cat];
             const Icon = style.icon;
             const items = documents.filter((d) => d.category === cat);
             return (
               <Reveal as="article" key={cat} delay={ci * 90}>
-                <div className={`flex h-full flex-col p-5 sm:p-6 ${style.card} ${style.shape}`}>
+                <div className={`relative flex h-full flex-col p-5 shadow-soft transition-transform duration-300 hover:-translate-y-1 sm:p-6 ${style.card} ${style.shape}`}>
+                  {/* вкладка папки */}
+                  <span aria-hidden className={`absolute -top-3.5 h-6 w-24 rounded-t-[16px] ${style.tab} ${style.tabPos}`} />
+                  {ci === 1 && <Heart className="absolute right-5 top-5 h-4 w-4" color="#F472B6" />}
                   <div className="flex items-center gap-3">
-                    <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl ${style.iconBg}`}>
-                      <Icon className="h-6 w-6 text-ink" aria-hidden />
+                    <span className="relative grid h-12 w-12 shrink-0 place-items-center">
+                      <Shape name={style.badge} fill={style.badgeFill} className="absolute inset-0 h-full w-full" />
+                      <Icon className="relative h-6 w-6 text-ink" aria-hidden />
                     </span>
                     <h3 className="font-display text-lg font-extrabold leading-snug text-ink">{t.documents.categories[cat]}</h3>
                   </div>
 
                   {items.length === 0 ? (
-                    <p className="mt-5 rounded-2xl border-2 border-dashed border-ink/15 bg-white/60 px-4 py-4 text-sm font-semibold text-ink-soft">
+                    <p className="mt-5 rounded-[20px_20px_20px_6px] border-2 border-dashed border-pink/40 bg-white/70 px-4 py-4 text-sm font-semibold text-ink-soft">
                       {t.documents.soon}
                     </p>
                   ) : (
@@ -59,7 +70,7 @@ export function Documents() {
                         const title = doc.title[lang];
                         const href = asset(doc.href);
                         return (
-                          <li key={doc.id} className="rounded-2xl bg-white p-3.5 shadow-soft">
+                          <li key={doc.id} className="rounded-[22px_22px_22px_8px] bg-white p-3.5 shadow-soft">
                             <div className="flex items-start gap-3">
                               <TypeIcon className="mt-0.5 h-5 w-5 shrink-0 text-ink-soft" aria-hidden />
                               <div className="min-w-0 flex-1">
@@ -73,7 +84,7 @@ export function Documents() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label={`${t.documents.open}: ${title}`}
-                                className="inline-flex min-h-10 items-center gap-1.5 rounded-full bg-ink px-4 text-sm font-extrabold text-white"
+                                className="inline-flex min-h-10 items-center gap-1.5 rounded-full bg-pink-deep px-4 text-sm font-extrabold text-white transition-colors hover:bg-[#c41f6a]"
                               >
                                 <ExternalLink className="h-4 w-4" aria-hidden />
                                 {t.documents.open}
@@ -83,7 +94,7 @@ export function Documents() {
                                   href={href}
                                   download
                                   aria-label={`${t.documents.download}: ${title}`}
-                                  className="inline-flex min-h-10 items-center gap-1.5 rounded-full bg-sun px-4 text-sm font-extrabold text-ink"
+                                  className="inline-flex min-h-10 items-center gap-1.5 rounded-full bg-white px-4 text-sm font-extrabold text-pink-ink ring-2 ring-pink/50 transition-colors hover:bg-blush"
                                 >
                                   <Download className="h-4 w-4" aria-hidden />
                                   {t.documents.download}

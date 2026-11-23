@@ -5,6 +5,7 @@ import { MapPin, Navigation } from "lucide-react";
 import { site, twoGisRouteLink } from "@/data/site";
 import { useLanguage } from "@/i18n/LanguageProvider";
 import { Cloud, Star } from "./decor/Decor";
+import { btnPrimary } from "@/lib/styles";
 
 type DGMap = { remove: () => void };
 type DGApi = {
@@ -77,19 +78,21 @@ export function TwoGisMap() {
 
   if (coords && !failed) {
     return (
-      <div className="relative h-full min-h-[300px] overflow-hidden rounded-[32px] bg-sky-soft shadow-soft ring-4 ring-white">
+      <div className="petal-c relative h-full min-h-[300px] overflow-hidden bg-lavender-soft shadow-soft ring-4 ring-white">
         <div ref={ref} className="absolute inset-0" role="region" aria-label={t.contacts.mapTitle} />
       </div>
     );
   }
 
   return (
-    <div className="relative flex h-full min-h-[280px] flex-col items-center justify-center overflow-hidden rounded-[32px] bg-gradient-to-br from-sky-soft via-white to-mint-soft p-6 text-center shadow-soft ring-4 ring-white sm:p-8">
+    <div className="shape-shadow h-full">
+    <div className="mask-blob3 relative flex h-full min-h-[340px] flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-sky-soft via-white to-mint-soft px-10 py-12 text-center sm:px-14">
       <div aria-hidden className="dotted-bg absolute inset-0 opacity-70" />
-      <Cloud className="absolute left-4 top-4 w-20" variant={3} />
-      <Star className="absolute bottom-6 right-6 h-6 w-6" color="#FFBDAB" />
-      <span className="relative grid h-16 w-16 place-items-center rounded-full bg-peach shadow-pop">
-        <MapPin className="h-8 w-8 text-ink" aria-hidden />
+      <Cloud className="absolute left-[12%] top-[12%] w-16 sm:w-20" variant={3} tint="#FFFFFF" />
+      <Star className="absolute bottom-[16%] right-[14%] h-6 w-6" color="#F472B6" />
+      <span className="relative grid h-16 w-16 place-items-center">
+        <span aria-hidden className="mask-heart absolute inset-0 bg-pink-deep" />
+        <MapPin className="relative -mt-1 h-7 w-7 text-white" aria-hidden />
       </span>
       <p className="relative mt-4 max-w-sm font-display text-base font-extrabold leading-snug text-ink sm:text-lg">{site.address[lang]}</p>
       <p className="relative mt-2 max-w-sm text-sm leading-relaxed text-ink-soft">{t.contacts.mapPending}</p>
@@ -97,11 +100,12 @@ export function TwoGisMap() {
         href={twoGisRouteLink()}
         target="_blank"
         rel="noopener noreferrer"
-        className="relative mt-5 inline-flex min-h-12 items-center gap-2 rounded-full bg-[#1DAD4F] px-5 text-sm font-extrabold text-white shadow-soft transition-transform hover:-translate-y-0.5"
+        className={`${btnPrimary} relative mt-5 min-h-12 px-5 text-sm`}
       >
         <Navigation className="h-4 w-4" aria-hidden />
         {t.contacts.openIn2gis}
       </a>
+    </div>
     </div>
   );
 }

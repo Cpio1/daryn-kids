@@ -22,7 +22,17 @@ const NAV: Exclude<SectionId, "home">[] = [
 
 const ALL_SECTIONS: SectionId[] = ["home", ...NAV];
 
-const MENU_COLORS = ["bg-sky-soft", "bg-peach-soft", "bg-mint-soft", "bg-sun-soft", "bg-lilac-soft", "bg-sky-soft", "bg-peach-soft"];
+const MENU_COLORS = ["bg-sky-soft", "bg-butter-soft", "bg-mint-soft", "bg-pink-soft", "bg-lavender-soft", "bg-peach-soft", "bg-sky-soft"];
+/** Пункты мобильного меню — «лепестки» разной формы. */
+const MENU_SHAPES = [
+  "rounded-[28px_28px_28px_8px]",
+  "rounded-[8px_28px_28px_28px]",
+  "rounded-[28px_8px_28px_28px]",
+  "rounded-[28px_28px_8px_28px]",
+  "rounded-[28px_28px_28px_8px]",
+  "rounded-[8px_28px_28px_28px]",
+  "rounded-[28px_8px_28px_28px]",
+];
 
 function useActiveSection() {
   const [active, setActive] = useState<SectionId>("home");
@@ -92,12 +102,12 @@ export function Header() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 h-[var(--header-h)] transition-[background-color,box-shadow] duration-300 ${
-        scrolled || open ? "bg-cream/95 shadow-[0_6px_24px_-14px_rgb(37_50_74/0.35)] backdrop-blur-md" : "bg-cream/70 backdrop-blur-sm"
+        scrolled || open ? "bg-cream/95 shadow-[0_6px_24px_-14px_rgb(190_24_93/0.35)] backdrop-blur-md" : "bg-cream/70 backdrop-blur-sm"
       }`}
     >
       <a
         href="#main"
-        className="absolute left-4 top-2 z-[60] -translate-y-24 rounded-full bg-ink px-4 py-2 text-sm font-bold text-white focus:translate-y-0"
+        className="absolute left-4 top-2 z-[60] -translate-y-24 rounded-full bg-pink-deep px-4 py-2 text-sm font-bold text-white focus:translate-y-0"
       >
         {t.skipToContent}
       </a>
@@ -130,7 +140,7 @@ export function Header() {
                     }`}
                   >
                     {t.nav[id]}
-                    {isActive && <span className="absolute -bottom-0.5 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-sun-deep" />}
+                    {isActive && <span className="absolute -bottom-0.5 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-pink-deep" />}
                   </a>
                 </li>
               );
@@ -144,7 +154,7 @@ export function Header() {
             href={whatsappLink(lang)}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden items-center gap-2 rounded-full bg-ink px-4 py-2.5 text-sm font-extrabold text-white shadow-soft transition-transform hover:-translate-y-0.5 lg:inline-flex"
+            className="hidden items-center gap-2 rounded-full bg-pink-deep px-4 py-2.5 text-sm font-extrabold text-white shadow-soft transition-all hover:-translate-y-0.5 hover:bg-[#c41f6a] lg:inline-flex"
           >
             <Send className="h-4 w-4" aria-hidden />
             <span>{t.navCta}</span>
@@ -155,7 +165,7 @@ export function Header() {
             aria-expanded={open}
             aria-controls="mobile-menu"
             aria-label={open ? t.menuClose : t.menuOpen}
-            className="grid h-11 w-11 place-items-center rounded-full bg-sun text-ink shadow-soft lg:hidden"
+            className="mask-scallop grid h-12 w-12 place-items-center bg-pink-deep text-white lg:hidden"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -179,12 +189,12 @@ export function Header() {
                   href={`#${id}`}
                   onClick={(e) => handleAnchorClick(e, id, close)}
                   aria-current={active === id ? "true" : undefined}
-                  className={`flex min-h-14 items-center justify-between rounded-3xl px-5 text-lg font-extrabold text-ink ring-2 transition-transform active:scale-[0.98] ${
-                    MENU_COLORS[i]
-                  } ${active === id ? "ring-ink/70" : "ring-transparent"}`}
+                  className={`flex min-h-14 items-center justify-between px-5 text-lg font-extrabold text-ink ring-2 transition-transform active:scale-[0.98] ${MENU_COLORS[i]} ${MENU_SHAPES[i]} ${
+                    active === id ? "ring-pink-deep" : "ring-transparent"
+                  }`}
                 >
                   {t.nav[id]}
-                  <span className="text-sm font-bold text-ink/40">0{i + 1}</span>
+                  <span className="text-sm font-black text-pink/70">0{i + 1}</span>
                 </a>
               </li>
             ))}
@@ -194,7 +204,7 @@ export function Header() {
               href={whatsappLink(lang)}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex min-h-14 items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 text-base font-extrabold text-white shadow-soft"
+              className="flex min-h-14 items-center justify-center gap-2 rounded-full bg-pink-deep px-5 text-base font-extrabold text-white shadow-soft"
             >
               <WhatsAppIcon className="h-5 w-5" />
               {t.contacts.whatsapp}

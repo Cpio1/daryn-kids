@@ -29,26 +29,26 @@ export function SunMark({ className, title }: SunMarkProps) {
             width={5.2}
             height={i % 2 ? 8 : 10}
             rx={2.6}
-            fill={i % 2 ? "#FF9F43" : "#FFC83D"}
+            fill={i % 2 ? "#F472B6" : "#FFB6A3"}
             transform={`rotate(${deg} 32 32)`}
           />
         ))}
       </g>
       <g transform="translate(32 32)">
-        <circle r={18} fill="#FFD65A" />
+        <circle r={18} fill="#FFD3B8" />
         <circle r={18} fill="url(#daryn-sun-shine)" />
-        <circle cx={-6.5} cy={-3} r={2.4} fill="#25324A" />
-        <circle cx={6.5} cy={-3} r={2.4} fill="#25324A" />
+        <circle cx={-6.5} cy={-3} r={2.4} fill="#44263A" />
+        <circle cx={6.5} cy={-3} r={2.4} fill="#44263A" />
         <circle cx={-5.8} cy={-3.8} r={0.8} fill="#fff" />
         <circle cx={7.2} cy={-3.8} r={0.8} fill="#fff" />
-        <circle cx={-11} cy={3.5} r={3} fill="#FFBDAB" opacity={0.9} />
-        <circle cx={11} cy={3.5} r={3} fill="#FFBDAB" opacity={0.9} />
-        <path d="M-6 4.5 Q0 11 6 4.5" stroke="#25324A" strokeWidth={2.4} fill="none" strokeLinecap="round" />
+        <circle cx={-11} cy={3.5} r={3} fill="#F9A8D4" opacity={0.95} />
+        <circle cx={11} cy={3.5} r={3} fill="#F9A8D4" opacity={0.95} />
+        <path d="M-6 4.5 Q0 11 6 4.5" stroke="#44263A" strokeWidth={2.4} fill="none" strokeLinecap="round" />
       </g>
       <defs>
         <radialGradient id="daryn-sun-shine" cx="0.35" cy="0.3" r="0.8">
-          <stop offset="0" stopColor="#FFF3B8" stopOpacity="0.9" />
-          <stop offset="0.6" stopColor="#FFD65A" stopOpacity="0" />
+          <stop offset="0" stopColor="#FFF4EA" stopOpacity="0.95" />
+          <stop offset="0.6" stopColor="#FFD3B8" stopOpacity="0" />
         </radialGradient>
       </defs>
     </svg>
@@ -67,7 +67,7 @@ export function Logo({ className = "", markClassName = "h-10 w-10", withText = t
       )}
       {withText && (
         <span className="font-display text-[1.35rem] font-black leading-none tracking-tight text-ink">
-          Dar<span className="text-sky-deep">y</span>n
+          Dar<span className="text-pink-deep">y</span>n
         </span>
       )}
     </span>

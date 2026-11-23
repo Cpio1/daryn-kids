@@ -7,21 +7,29 @@ import { useLanguage } from "@/i18n/LanguageProvider";
 import { site } from "@/data/site";
 import { InstagramIcon } from "./BrandIcons";
 import { Reveal, SectionHeading } from "./ui";
-import { Cloud, MiniSun, Star } from "./decor/Decor";
+import { Cloud, Flower, Heart, MiniSun, Sparkle, Star } from "./decor/Decor";
+import { btnPrimary, btnSecondary } from "@/lib/styles";
 
 export type GalleryImage = { src: string };
 
 /** Повторяющийся узор размеров плиток (mobile: 2 колонки, desktop: 4 колонки). */
 const PAGE_SIZE = 12;
 
+/** Размер плитки + фигурная рамка: пятно, фестончатый овал, капля, облако, волна. */
 const TILE_PATTERN = [
-  "col-span-2 row-span-2 rounded-[36px_36px_36px_12px]",
-  "row-span-1 rounded-[28px]",
-  "row-span-2 rounded-[28px_28px_12px_28px]",
-  "row-span-1 rounded-[12px_28px_28px_28px]",
-  "col-span-2 row-span-1 rounded-[28px]",
-  "row-span-1 rounded-[28px_12px_28px_28px]",
+  { span: "col-span-2 row-span-2", mask: "mask-blob3" },
+  { span: "row-span-1", mask: "mask-blob2" },
+  { span: "row-span-2", mask: "mask-egg" },
+  { span: "row-span-1", mask: "mask-cloud" },
+  { span: "col-span-2 row-span-1", mask: "mask-wave" },
+  { span: "row-span-1", mask: "mask-blob1" },
 ];
+
+/** Последняя «широкая» плитка растягивается на всю строку, чтобы в сетке не оставалось дыр. */
+function tileSpan(i: number, count: number) {
+  const isLastWide = i === count - 1 && i % TILE_PATTERN.length === 4;
+  return isLastWide ? "col-span-2 row-span-1 md:col-span-3 lg:col-span-4" : TILE_PATTERN[i % TILE_PATTERN.length].span;
+}
 
 function Lightbox({
   images,
@@ -70,7 +78,7 @@ function Lightbox({
       role="dialog"
       aria-modal="true"
       aria-label={`${t.gallery.counter} ${index + 1} ${t.gallery.of} ${total}`}
-      className="fixed inset-0 z-[70] flex flex-col bg-ink/92 backdrop-blur-sm"
+      className="fixed inset-0 z-[70] flex flex-col bg-ink/95 backdrop-blur-sm"
       onClick={(e) => e.target === e.currentTarget && onClose()}
       onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
       onTouchEnd={(e) => {
@@ -146,34 +154,37 @@ function Lightbox({
 
 function EmptyGallery() {
   const { t } = useLanguage();
-  const tiles = ["bg-sky-soft", "bg-peach-soft", "bg-mint-soft", "bg-sun-soft"];
+  // будущие «рамки» фото — разные формы, без чужих изображений
+  const tiles = [
+    { cls: "col-span-2 mask-blob3 bg-sky-soft", icon: <MiniSun className="h-10 w-10" /> },
+    { cls: "mask-scallop bg-pink-soft", icon: <Heart className="h-6 w-6" color="#FFFFFF" /> },
+    { cls: "mask-cloud bg-mint", icon: <Star className="h-6 w-6" /> },
+    { cls: "col-span-2 mask-wave bg-butter-soft", icon: <Camera className="h-6 w-6 text-pink/60" /> },
+  ];
   return (
     <Reveal className="mt-10 lg:mt-12">
-      <div className="relative grid items-center gap-8 overflow-hidden rounded-[40px] bg-white p-6 shadow-soft ring-1 ring-ink/5 sm:p-10 lg:grid-cols-[1fr_1.1fr] lg:p-12">
+      <div className="petal-a relative grid items-center gap-8 overflow-hidden bg-white p-6 shadow-soft ring-1 ring-pink/15 sm:p-10 lg:grid-cols-[1fr_1.1fr] lg:p-12">
+        <Sparkle className="absolute right-6 top-6 h-5 w-5" color="#C4B5FD" />
         <div className="relative z-10 text-center lg:text-left">
-          <span className="mx-auto grid h-16 w-16 place-items-center rounded-[22px] bg-sun lg:mx-0">
-            <Camera className="h-8 w-8 text-ink" aria-hidden />
+          <span className="mask-flower mx-auto grid h-16 w-16 place-items-center bg-butter lg:mx-0">
+            <Camera className="h-7 w-7 text-pink-deep" aria-hidden />
           </span>
-          <h3 className="mt-4 font-display text-xl font-extrabold text-ink sm:text-2xl">{t.gallery.emptyTitle}</h3>
+          <h3 className="mt-4 font-display text-xl font-black text-ink sm:text-2xl">{t.gallery.emptyTitle}</h3>
           <p className="mx-auto mt-2 max-w-md text-base leading-relaxed text-ink-soft lg:mx-0">{t.gallery.emptyText}</p>
           <a
             href={site.instagram.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-6 inline-flex min-h-12 items-center gap-2 rounded-full bg-gradient-to-r from-[#f58529] via-[#dd2a7b] to-[#8134af] px-6 text-sm font-extrabold text-white shadow-soft transition-transform hover:-translate-y-0.5"
+            className={`${btnPrimary} mt-6 min-h-12 bg-gradient-to-r from-pink-deep via-[#e0479a] to-lavender-deep px-6 text-sm`}
           >
             <InstagramIcon className="h-5 w-5" />
             {t.gallery.instagram}
           </a>
         </div>
-        {/* Пустые «рамки» будущих фото — без чужих изображений */}
-        <div aria-hidden className="hidden grid-cols-3 grid-rows-[repeat(2,72px)] min-[480px]:grid gap-2.5 sm:grid-rows-[repeat(2,110px)] sm:gap-3">
-          {tiles.map((cls, i) => (
-            <div
-              key={cls}
-              className={`grid place-items-center ${cls} ${i === 0 ? "col-span-2 rounded-[28px_28px_28px_10px]" : i === 3 ? "col-span-2 rounded-[10px_28px_28px_28px]" : "rounded-[24px]"}`}
-            >
-              {i === 0 ? <MiniSun className="h-10 w-10" /> : i === 2 ? <Star className="h-7 w-7" color="#FFBDAB" /> : <Camera className="h-6 w-6 text-ink/20" />}
+        <div aria-hidden className="hidden grid-cols-3 grid-rows-[repeat(2,80px)] gap-3 min-[480px]:grid sm:grid-rows-[repeat(2,112px)]">
+          {tiles.map(({ cls, icon }, i) => (
+            <div key={i} className={`grid place-items-center ${cls}`}>
+              {icon}
             </div>
           ))}
         </div>
@@ -193,23 +204,25 @@ export function Gallery({ images }: { images: GalleryImage[] }) {
     <section
       id="gallery"
       aria-labelledby="gallery-title"
-      className="relative overflow-hidden bg-gradient-to-b from-cream via-mint-soft/60 to-cream py-12 sm:py-16 lg:py-20"
+      className="relative overflow-hidden bg-gradient-to-b from-cream via-mint-soft to-cream py-12 sm:py-16 lg:py-20"
     >
-      <Cloud className="absolute left-[3%] top-10 hidden w-24 animate-drift motion-reduce:animate-none md:block" variant={1} />
+      <Cloud className="absolute left-[3%] top-10 hidden w-24 animate-drift motion-reduce:animate-none md:block" variant={1} tint="#FFFFFF" />
+      <Flower className="absolute right-[5%] top-14 hidden h-8 w-8 animate-bob motion-reduce:animate-none md:block" color="#A7DBF5" center="#FFD166" />
+      <Heart className="absolute bottom-10 left-[6%] hidden h-5 w-5 lg:block" color="#C4B5FD" />
       <div className="relative mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
-        <SectionHeading id="gallery-title" eyebrow={t.gallery.eyebrow} title={t.gallery.title} text={t.gallery.text} eyebrowClass="bg-sky/70" />
+        <SectionHeading id="gallery-title" eyebrow={t.gallery.eyebrow} title={t.gallery.title} text={t.gallery.text} eyebrowClass="bg-lavender/70" />
 
         {images.length === 0 ? (
           <EmptyGallery />
         ) : (
           <ul className="mt-10 grid grid-flow-dense auto-rows-[132px] grid-cols-2 gap-2.5 min-[480px]:auto-rows-[170px] sm:gap-3 md:grid-cols-3 lg:mt-12 lg:auto-rows-[190px] lg:grid-cols-4 lg:gap-4">
             {visible.map((img, i) => (
-              <li key={img.src} className={`relative overflow-hidden ${TILE_PATTERN[i % TILE_PATTERN.length]}`}>
+              <li key={img.src} className={`shape-shadow relative ${tileSpan(i, visible.length)}`}>
                 <button
                   type="button"
                   onClick={() => setOpenIndex(i)}
                   aria-label={`${t.gallery.open}: ${i + 1}`}
-                  className="group absolute inset-0 overflow-hidden rounded-[inherit] bg-sky-soft"
+                  className={`group absolute inset-0 overflow-hidden bg-mint-soft ${TILE_PATTERN[i % TILE_PATTERN.length].mask}`}
                 >
                   <Image
                     src={img.src}
@@ -218,8 +231,8 @@ export function Gallery({ images }: { images: GalleryImage[] }) {
                     sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
                     className="object-cover object-[center_30%] transition-transform duration-500 group-hover:scale-105"
                   />
-                  <span className="absolute inset-0 grid place-items-center bg-ink/0 opacity-0 transition-all duration-300 group-hover:bg-ink/25 group-hover:opacity-100 group-focus-visible:bg-ink/25 group-focus-visible:opacity-100">
-                    <span className="grid h-12 w-12 place-items-center rounded-full bg-white text-ink">
+                  <span className="absolute inset-0 grid place-items-center bg-ink/0 opacity-0 transition-all duration-300 group-hover:bg-pink-deep/25 group-hover:opacity-100 group-focus-visible:bg-pink-deep/35 group-focus-visible:opacity-100">
+                    <span className="mask-flower grid h-14 w-14 place-items-center bg-white text-pink-deep">
                       <ZoomIn className="h-5 w-5" aria-hidden />
                     </span>
                   </span>
@@ -234,7 +247,7 @@ export function Gallery({ images }: { images: GalleryImage[] }) {
             <button
               type="button"
               onClick={() => setShown((n) => n + PAGE_SIZE)}
-              className="inline-flex min-h-12 items-center gap-2 rounded-full bg-white px-6 text-sm font-extrabold text-ink shadow-soft ring-1 ring-ink/10 transition-transform hover:-translate-y-0.5"
+              className={`${btnSecondary} min-h-12 px-6 text-sm`}
             >
               {t.gallery.more} ({images.length - shown})
             </button>

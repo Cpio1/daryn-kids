@@ -16,10 +16,21 @@ function exists(rel: string) {
 
 /** Главное фото/видео: показываются, только если файлы реально лежат в public/images. */
 export function getHeroMedia() {
-  const image = ["main-page.png", "main-page.jpg", "main-page.webp"].find((f) => exists(`images/${f}`));
+  // ищем main-page.* в public/images/, затем в public/images/gallery/
+  const names = ["main-page.png", "main-page.jpg", "main-page.jpeg", "main-page.webp"];
+  const image = ["images", "images/gallery"].flatMap((dir) => names.map((n) => `${dir}/${n}`)).find((rel) => exists(rel));
+  return {
+    image: image ? asset(`/${image}`) : null,
+    video: exists("images/main-page2.mp4") ? asset("/images/main-page2.mp4") : null,
+  };
+}
+
+/** Фото или видео для раздела «О нас»: public/images/about.(jpg|png|webp) и/или about.mp4. */
+export function getAboutMedia() {
+  const image = ["about.jpg", "about.jpeg", "about.png", "about.webp"].find((f) => exists(`images/${f}`));
   return {
     image: image ? asset(`/images/${image}`) : null,
-    video: exists("images/main-page2.mp4") ? asset("/images/main-page2.mp4") : null,
+    video: exists("images/about.mp4") ? asset("/images/about.mp4") : null,
   };
 }
 

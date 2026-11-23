@@ -48,11 +48,11 @@ export function WhatsAppButton() {
       aria-label={t.whatsappFloat}
       tabIndex={visible ? 0 : -1}
       aria-hidden={!visible}
-      className={`fixed bottom-[max(16px,env(safe-area-inset-bottom))] right-4 z-40 inline-flex h-14 items-center gap-2 rounded-full bg-[#25D366] pl-4 pr-4 text-white shadow-[0_14px_30px_-10px_rgb(37_211_102/0.8)] transition-all duration-300 hover:-translate-y-0.5 sm:right-6 lg:bottom-6 lg:pr-5 ${
+      className={`fixed bottom-[max(16px,env(safe-area-inset-bottom))] right-4 z-40 inline-flex h-14 items-center gap-2 rounded-full bg-pink-deep pl-4 pr-4 text-white shadow-[0_14px_30px_-10px_rgb(219_39_119/0.75)] transition-all duration-300 hover:-translate-y-0.5 sm:right-6 lg:bottom-6 lg:pr-5 ${
         visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-6 opacity-0"
       }`}
     >
-      <span aria-hidden className="absolute inset-0 -z-10 animate-ping rounded-full bg-[#25D366]/40 [animation-duration:2.6s] [animation-iteration-count:3] motion-reduce:hidden" />
+      <span aria-hidden className="absolute inset-0 -z-10 animate-ping rounded-full bg-pink/40 [animation-duration:2.6s] [animation-iteration-count:3] motion-reduce:hidden" />
       <WhatsAppIcon className="h-7 w-7" />
       <span className="hidden text-sm font-extrabold lg:inline">{t.whatsappFloat}</span>
     </a>

@@ -10,7 +10,7 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
     <div
       role="group"
       aria-label={t.langSwitch}
-      className={`relative inline-flex shrink-0 rounded-full bg-white p-1 shadow-soft ring-1 ring-ink/10 ${className}`}
+      className={`relative inline-flex shrink-0 rounded-full bg-white p-1 shadow-soft ring-1 ring-pink/25 ${className}`}
     >
       {LANGS.map((code) => {
         const active = code === lang;
@@ -23,7 +23,7 @@ export function LanguageSwitcher({ className = "" }: { className?: string }) {
             aria-pressed={active}
             aria-label={dictionaries[code].langName}
             className={`min-w-10 rounded-full px-2.5 py-1.5 text-sm font-extrabold transition-colors ${
-              active ? "bg-sun text-ink shadow-sm" : "text-ink-soft hover:text-ink"
+              active ? "bg-pink-deep text-white shadow-sm" : "text-ink-soft hover:text-pink-ink"
             }`}
           >
             {dictionaries[code].langShort}
