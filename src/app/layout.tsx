@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Nunito } from "next/font/google";
 import { LanguageProvider, langBootScript } from "@/i18n/LanguageProvider";
 import { site } from "@/data/site";
+import { BASE_PATH } from "@/lib/basePath";
 import "./globals.css";
 
 // Nunito содержит cyrillic-ext: Ә Ғ Қ Ң Ө Ұ Ү Һ І отображаются корректно
@@ -29,10 +30,11 @@ export const metadata: Metadata = {
     siteName: "Daryn",
     title,
     description,
-    url: "/",
+    url: `${BASE_PATH}/`,
+    images: [{ url: `${site.url}${BASE_PATH}/og-image.png`, width: 1200, height: 630, alt: "Daryn" }],
   },
-  twitter: { card: "summary_large_image", title, description },
-  alternates: { canonical: "/" },
+  twitter: { card: "summary_large_image", title, description, images: [`${site.url}${BASE_PATH}/og-image.png`] },
+  alternates: { canonical: `${BASE_PATH}/` },
   formatDetection: { telephone: false },
   other: { "color-scheme": "only light", "supported-color-schemes": "light" },
 };

@@ -6,19 +6,33 @@
 
 ```bash
 npm install
-npm run dev        # http://localhost:3000
-npm run build      # production-сборка
-npm start          # запуск собранной версии
-npm run typecheck  # проверка TypeScript
+npm run dev          # http://localhost:3000 (без префикса /daryn-kids)
+npm run build        # статическая сборка в папку out/
+npm run build:pages  # сборка как для GitHub Pages (с префиксом /daryn-kids)
+npm run typecheck    # проверка TypeScript
 ```
 
-Требуется Node.js 20+.
+Требуется Node.js 20.9+.
 
-## Деплой на Vercel
+Сайт собирается как полностью статический (`output: "export"`), сервер не нужен.
+Готовая сборка лежит в `out/`. Чтобы посмотреть обычную сборку: `npm run build && npm run preview` → http://localhost:4173.
 
-1. Загрузите проект в репозиторий GitHub.
-2. На vercel.com → **Add New → Project** → выберите репозиторий. Настройки по умолчанию (Framework: Next.js) подходят.
-3. После деплоя укажите реальный домен в `src/data/site.ts` → `url` (нужно для Open Graph).
+## Публикация на GitHub Pages
+
+Сайт: **https://cpio1.github.io/daryn-kids/**
+
+Публикация автоматическая: каждый `git push` в ветку `main` запускает workflow `.github/workflows/deploy.yml`.
+Он собирает сайт с `NEXT_PUBLIC_BASE_PATH=/daryn-kids` и публикует `out/` через GitHub Pages Actions.
+
+Один раз в репозитории: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+
+Ход сборки: вкладка **Actions** → «Deploy to GitHub Pages». Можно запустить вручную: **Run workflow**.
+
+### Пути к файлам
+На GitHub Pages сайт живёт по адресу `/daryn-kids/`, поэтому пути к файлам из `public/` в коде
+оборачиваются в `asset()` из `src/lib/basePath.ts` (фото, видео, документы и логотип уже обёрнуты).
+Если добавляете новый `<img>`, `<video>` или ссылку на файл из `public/`, используйте `asset("/images/...")`.
+Якорные ссылки (`#about`) и внешние ссылки менять не нужно.
 
 ## Где что менять
 
@@ -36,7 +50,7 @@ npm run typecheck  # проверка TypeScript
 - `public/images/main-page.png` (или `.jpg` / `.webp`) — фото главного экрана.
 - `public/images/main-page2.mp4` — видео главного экрана (без звука при загрузке, есть кнопка включения звука).
 
-Если файлов нет, показывается векторная иллюстрация. Файлы подхватываются при сборке — после добавления пересоберите проект (`npm run build` или новый деплой на Vercel).
+Если файлов нет, показывается векторная иллюстрация. Файлы подхватываются при сборке — после добавления сделайте `git push`, и сайт пересоберётся.
 
 ### Галерея
 Положите фотографии в `public/images/gallery/` (`.jpg`, `.jpeg`, `.png`, `.webp`, `.avif`).
@@ -44,7 +58,7 @@ npm run typecheck  # проверка TypeScript
 Если папка пуста, показывается аккуратное пустое состояние со ссылкой на Instagram.
 Первые 12 фото видны сразу, остальные — по кнопке «Показать ещё». Просмотр — в модальном окне (стрелки, свайп, Escape).
 
-Рекомендуется загружать фото шириной до 2000 px — Next.js сам сожмёт их в AVIF/WebP.
+На GitHub Pages изображения не сжимаются автоматически, поэтому сохраняйте фото в JPEG/WebP шириной до 1600–2000 px и весом до ~500 КБ.
 
 ### Документы
 1. Положите PDF или изображение в `public/documents/`.

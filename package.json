@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "build:pages": "NEXT_PUBLIC_BASE_PATH=/daryn-kids next build",
+    "preview": "python3 -m http.server 4173 --directory out",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -22,5 +23,8 @@
     "@types/react-dom": "^19.3.0",
     "tailwindcss": "^4.3.5",
     "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=20.9"
   }
 }

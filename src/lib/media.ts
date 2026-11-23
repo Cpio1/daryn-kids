@@ -1,6 +1,7 @@
 import "server-only";
 import fs from "node:fs";
 import path from "node:path";
+import { asset } from "./basePath";
 
 const PUBLIC_DIR = path.join(process.cwd(), "public");
 const IMAGE_EXT = /\.(png|jpe?g|webp|avif)$/i;
@@ -17,8 +18,8 @@ function exists(rel: string) {
 export function getHeroMedia() {
   const image = ["main-page.png", "main-page.jpg", "main-page.webp"].find((f) => exists(`images/${f}`));
   return {
-    image: image ? `/images/${image}` : null,
-    video: exists("images/main-page2.mp4") ? "/images/main-page2.mp4" : null,
+    image: image ? asset(`/images/${image}`) : null,
+    video: exists("images/main-page2.mp4") ? asset("/images/main-page2.mp4") : null,
   };
 }
 
@@ -30,7 +31,7 @@ export function getGalleryImages() {
       .readdirSync(dir)
       .filter((f) => IMAGE_EXT.test(f) && !f.startsWith("."))
       .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
-      .map((f) => ({ src: `/images/gallery/${encodeURIComponent(f)}` }));
+      .map((f) => ({ src: asset(`/images/gallery/${encodeURIComponent(f)}`) }));
   } catch {
     return [];
   }

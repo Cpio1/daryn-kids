@@ -9,7 +9,8 @@ export type Localized = Record<Lang, string>;
 
 export const site = {
   brand: "Daryn",
-  url: "https://daryn.kz", // замените на реальный домен после деплоя
+  /** Адрес сайта без basePath (домен). На GitHub Pages: https://cpio1.github.io */
+  url: "https://cpio1.github.io",
 
   phone: {
     display: "+7 747 403 45 41",

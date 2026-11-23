@@ -4,6 +4,7 @@
  * и передайте путь в LOGO_SRC — компонент покажет файл вместо SVG.
  */
 import Image from "next/image";
+import { asset } from "@/lib/basePath";
 
 export const LOGO_SRC: string | null = null; // например "/images/logo.svg"
 
@@ -60,7 +61,7 @@ export function Logo({ className = "", markClassName = "h-10 w-10", withText = t
   return (
     <span className={`inline-flex items-center gap-2 ${className}`}>
       {LOGO_SRC ? (
-        <Image src={LOGO_SRC} alt="Daryn" width={48} height={48} className={markClassName} />
+        <Image src={asset(LOGO_SRC)} alt="Daryn" width={48} height={48} className={markClassName} />
       ) : (
         <SunMark className={`${markClassName} shrink-0`} />
       )}

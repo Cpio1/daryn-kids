@@ -6,6 +6,7 @@ import { useLanguage } from "@/i18n/LanguageProvider";
 import { documentCategories, documents, type DocumentCategory, type DocumentType } from "@/data/documents";
 import { Reveal, SectionHeading } from "./ui";
 import { Sparkle } from "./decor/Decor";
+import { asset } from "@/lib/basePath";
 
 const CATEGORY_STYLE: Record<DocumentCategory, { icon: LucideIcon; card: string; iconBg: string; shape: string }> = {
   licenses: { icon: ShieldCheck, card: "bg-sky-soft", iconBg: "bg-sky", shape: "rounded-[36px_36px_36px_12px]" },
@@ -56,6 +57,7 @@ export function Documents() {
                         const TypeIcon = TYPE_ICON[doc.type];
                         const isFile = doc.type === "pdf" || doc.type === "image";
                         const title = doc.title[lang];
+                        const href = asset(doc.href);
                         return (
                           <li key={doc.id} className="rounded-2xl bg-white p-3.5 shadow-soft">
                             <div className="flex items-start gap-3">
@@ -67,7 +69,7 @@ export function Documents() {
                             </div>
                             <div className="mt-3 flex flex-wrap gap-2">
                               <a
-                                href={doc.href}
+                                href={href}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label={`${t.documents.open}: ${title}`}
@@ -78,7 +80,7 @@ export function Documents() {
                               </a>
                               {isFile && (
                                 <a
-                                  href={doc.href}
+                                  href={href}
                                   download
                                   aria-label={`${t.documents.download}: ${title}`}
                                   className="inline-flex min-h-10 items-center gap-1.5 rounded-full bg-sun px-4 text-sm font-extrabold text-ink"
