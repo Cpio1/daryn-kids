@@ -1,0 +1,163 @@
+@import "tailwindcss";
+
+/* Сайт всегда светлый: без dark-варианта и без prefers-color-scheme */
+@custom-variant dark (&:where(.never-dark, .never-dark *));
+
+@theme {
+  --color-sun: #ffd65a;
+  --color-sun-soft: #ffe89e;
+  --color-sun-deep: #f7b733;
+  --color-orange: #ff9f43;
+  --color-sky: #8ed8f8;
+  --color-sky-soft: #d4f0fc;
+  --color-sky-deep: #3fb4e6;
+  --color-peach: #ffbdab;
+  --color-peach-soft: #ffe3da;
+  --color-peach-deep: #f2876b;
+  --color-mint: #bcebcb;
+  --color-mint-soft: #e2f7e8;
+  --color-mint-deep: #4fbf7a;
+  --color-lilac: #d9cdfb;
+  --color-lilac-soft: #efeafe;
+  --color-cream: #fff9ed;
+  --color-ink: #25324a;
+  --color-ink-soft: #4d5a73;
+
+  --font-sans: var(--font-nunito), "Segoe UI", system-ui, sans-serif;
+  --font-display: var(--font-nunito), "Segoe UI", system-ui, sans-serif;
+
+  --shadow-soft: 0 10px 30px -12px rgb(37 50 74 / 0.18);
+  --shadow-pop: 0 18px 40px -16px rgb(37 50 74 / 0.28);
+
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-drift: drift 26s ease-in-out infinite alternate;
+  --animate-spin-slow: daryn-spin 40s linear infinite;
+  --animate-twinkle: twinkle 3.2s ease-in-out infinite;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  @keyframes drift {
+    from { transform: translateX(-14px); }
+    to { transform: translateX(14px); }
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.55; transform: scale(0.85); }
+  }
+}
+
+:root {
+  color-scheme: only light;
+  --header-h: 64px;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --header-h: 76px;
+  }
+}
+
+html {
+  color-scheme: only light;
+  background: var(--color-cream);
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: clip;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Не показываем смешанный язык, пока применяется сохранённый выбор */
+html.lang-pending body {
+  visibility: hidden;
+}
+
+section[id] {
+  scroll-margin-top: calc(var(--header-h) + 8px);
+}
+
+::selection {
+  background: var(--color-sun);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-sky-deep);
+  outline-offset: 3px;
+  border-radius: 12px;
+}
+
+/* Появление секций */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Органические формы */
+.blob-a { border-radius: 58% 42% 55% 45% / 48% 55% 45% 52%; }
+.blob-b { border-radius: 42% 58% 38% 62% / 55% 40% 60% 45%; }
+.blob-c { border-radius: 64% 36% 50% 50% / 40% 60% 40% 60%; }
+.arch { border-radius: 999px 999px 32px 32px; }
+.ticket { border-radius: 32px 32px 32px 8px; }
+.ticket-r { border-radius: 32px 32px 8px 32px; }
+
+.dotted-bg {
+  background-image: radial-gradient(rgb(37 50 74 / 0.08) 1.4px, transparent 1.4px);
+  background-size: 22px 22px;
+}
+
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .js .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Лучи солнышка в логотипе медленно вращаются, лицо остаётся на месте */
+.sun-rays {
+  transform-origin: 32px 32px;
+  animation: daryn-spin 40s linear infinite;
+}
+
+@keyframes daryn-spin {
+  to { transform: rotate(360deg); }
+}
+
+.hero-sun-rays {
+  transform-origin: 0 0;
+  animation: daryn-spin 60s linear infinite;
+}
+
+/* Элементы сетки не должны раздувать колонку шире экрана */
+.grid > * {
+  min-width: 0;
+}
